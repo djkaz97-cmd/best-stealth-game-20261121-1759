@@ -48,7 +48,7 @@ function buildAtrium() {
   paintRect(grid, 23, 1, 28, 4, WALL);
   paintRect(grid, 24, 2, 27, 3, FLOOR);
   put(grid, 25, 4, FLOOR);
-  put(grid, 26, 2, GOAL);
+  put(grid, 26, 3, GOAL);
   put(grid, 24, 2, LAMP);
 
   // The alcove's shadowed doorstep.
@@ -112,7 +112,7 @@ function buildGallery() {
   paintRect(grid, 23, 5, 28, 5, WALL);
   paintRect(grid, 28, 1, 28, 5, WALL);
   put(grid, 24, 5, FLOOR);
-  put(grid, 25, 2, GOAL);
+  put(grid, 25, 3, GOAL);
   put(grid, 24, 2, LAMP);
   paintRect(grid, 27, 3, 27, 4, SHADOW);
 
