@@ -45,14 +45,15 @@ function buildAtrium() {
 
   // A garden of shadow in the north-west, and the Emberglass alcove north-east.
   paintRect(grid, 2, 1, 6, 4, SHADOW);
-  paintRect(grid, 23, 1, 28, 4, WALL);
-  paintRect(grid, 24, 2, 27, 3, FLOOR);
-  put(grid, 25, 4, FLOOR);
+  paintRect(grid, 23, 1, 28, 5, WALL);
+  paintRect(grid, 24, 2, 27, 4, FLOOR);
+  put(grid, 25, 5, FLOOR);
+  put(grid, 23, 3, FLOOR);
   put(grid, 26, 3, GOAL);
   put(grid, 24, 2, LAMP);
 
   // The alcove's shadowed doorstep.
-  paintRect(grid, 23, 5, 27, 5, SHADOW);
+  paintRect(grid, 23, 6, 27, 6, SHADOW);
 
   // A divider between the hall and the east corridor, with two archways.
   paintRect(grid, 22, 6, 22, 15, WALL);
@@ -112,6 +113,7 @@ function buildGallery() {
   paintRect(grid, 23, 5, 28, 5, WALL);
   paintRect(grid, 28, 1, 28, 5, WALL);
   put(grid, 24, 5, FLOOR);
+  put(grid, 22, 3, FLOOR);
   put(grid, 25, 3, GOAL);
   put(grid, 24, 2, LAMP);
   paintRect(grid, 27, 3, 27, 4, SHADOW);
