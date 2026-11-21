@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOLLOWLIGHT — a stealth errand in three floors</title>
+<meta name="description" content="HOLLOWLIGHT: a top-down stealth game about carrying the Emberglass past four lanterns and out of the Hollowlight Archive.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="viewport">
+  <main id="stage" aria-label="HOLLOWLIGHT, a top-down stealth game">
+    <canvas id="game" width="1200" height="720" aria-label="Top-down view of a lantern-lit archive. You are a hooded courier. Watchmen carry vision cones; crates, pillars, walls and shadow pools can hide you. Take the Emberglass and reach the night door."></canvas>
+
+    <header id="hud">
+      <div class="hud-top">
+        <div class="floor-chip">
+          <p class="kicker">FLOOR <span id="floor-num">I</span></p>
+          <h1 id="floor-name">The Atrium</h1>
+        </div>
+
+        <div class="detect">
+          <div class="detect-head">
+            <span id="detect-state">UNSEEN</span>
+            <span class="detect-eye" aria-hidden="true">◉</span>
+          </div>
+          <div class="detect-bar" id="detect-bar" data-state="clear" role="meter" aria-label="Detection meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="detect-fill"></div>
+            <span class="tick tick-1" aria-hidden="true"></span>
+            <span class="tick tick-2" aria-hidden="true"></span>
+            <span class="tick tick-3" aria-hidden="true"></span>
+          </div>
+          <div class="alarm-row" id="alarm-row" aria-hidden="true">
+            <span class="alarm-label">ALARM</span>
+            <div class="alarm-bar"><div id="alarm-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span class="stat-k">TIME</span><span class="stat-v" id="stat-time">0:00</span></div>
+          <div class="stat"><span class="stat-k">SEEN</span><span class="stat-v" id="stat-seen">0</span></div>
+          <button class="mute" id="btn-mute" type="button" aria-pressed="false">SOUND ON</button>
+        </div>
+      </div>
+
+      <div class="objective" id="objective">
+        <span class="obj-step" id="obj-item"><span class="obj-mark" aria-hidden="true"></span><span class="obj-text">Steal the Emberglass</span></span>
+        <span class="obj-sep" aria-hidden="true">›</span>
+        <span class="obj-step dim" id="obj-exit"><span class="obj-mark" aria-hidden="true"></span><span class="obj-text">Reach the night door</span></span>
+      </div>
+
+      <div class="hud-bottom">
+        <p class="hint" id="hint">Cross behind the pillars. Hold Shift to muffle your steps.</p>
+        <div class="keys" aria-hidden="true">
+          <span><kbd>WASD</kbd> move</span>
+          <span><kbd>Shift</kbd> sneak</span>
+          <span><kbd>E</kbd> take</span>
+          <span><kbd>R</kbd> reset</span>
+          <span><kbd>Esc</kbd> pause</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="screen is-open" id="screen-title" aria-label="Title">
+      <div class="panel title-panel">
+        <p class="kicker">A NIGHT ERRAND IN THREE FLOORS</p>
+        <h2 class="logo"><span>HOLLOW</span><em>LIGHT</em></h2>
+        <p class="lede">The Hollowlight Archive keeps the city’s memories in glass. Tonight the Emberglass — the first lantern ever lit — sits in the vault with the watch walking round it. You have until dawn to carry it out through the night door.</p>
+
+        <div class="brief">
+          <ul class="rules">
+            <li><b>Lantern cones see you.</b> Step into one and suspicion rises; stay in it and the watch is sure.</li>
+            <li><b>Shadow pools hide you.</b> Crates, pillars and walls break a lantern’s line, and the dark hides you until a guard is close.</li>
+            <li><b>A near miss is survivable.</b> Break sight, let the meter fall, and the watch returns to its round.</li>
+          </ul>
+          <dl class="controls">
+            <div><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>walk — arrows too</dd></div>
+            <div><dt><kbd>Shift</kbd></dt><dd>sneak: slow, quiet</dd></div>
+            <div><dt><kbd>E</kbd></dt><dd>lift the Emberglass</dd></div>
+            <div><dt><kbd>R</kbd></dt><dd>reset the floor</dd></div>
+            <div><dt><kbd>Esc</kbd></dt><dd>pause</dd></div>
+            <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></dt><dd>pick a floor</dd></div>
+          </dl>
+        </div>
+
+        <button class="cta" id="btn-start" type="button">Begin the errand <span>Enter</span></button>
+        <p class="foot">HOLLOWLIGHT · original game · canvas &amp; Web Audio only · no network</p>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-pause" aria-label="Paused">
+      <div class="panel small-panel">
+        <p class="kicker">THE NIGHT HOLDS ITS BREATH</p>
+        <h2 class="screen-title">PAUSED</h2>
+        <p class="copy">The watch keeps its round while you stand still.</p>
+        <div class="button-row">
+          <button class="cta" id="btn-resume" type="button">Resume <span>Esc</span></button>
+          <button class="ghost" id="btn-pause-title" type="button">Back to title</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-win" aria-label="Floor cleared">
+      <div class="panel small-panel">
+        <p class="kicker" id="win-kicker">FLOOR I CLEARED</p>
+        <h2 class="screen-title" id="win-title">DAWN BREAKS</h2>
+        <p class="copy" id="win-copy">You slip through the night door with the Emberglass, and the watch is none the wiser.</p>
+        <div class="result-row">
+          <div class="result"><span>TIME</span><b id="win-time">0:00</b></div>
+          <div class="result"><span>SEEN</span><b id="win-seen">0</b></div>
+          <div class="result"><span>BEST</span><b id="win-best">—</b></div>
+        </div>
+        <div class="button-row">
+          <button class="cta" id="btn-next" type="button">Next floor</button>
+          <button class="ghost" id="btn-replay" type="button">Replay floor</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-lose" aria-label="Caught">
+      <div class="panel small-panel danger">
+        <p class="kicker">THE WATCH CLOSES IN</p>
+        <h2 class="screen-title" id="lose-title">CAUGHT</h2>
+        <p class="copy" id="lose-copy">A lantern finds you at arm’s length. There is no polite way out of this.</p>
+        <div class="result-row">
+          <div class="result"><span>TIME</span><b id="lose-time">0:00</b></div>
+          <div class="result"><span>SEEN</span><b id="lose-seen">0</b></div>
+        </div>
+        <div class="button-row">
+          <button class="cta" id="btn-retry" type="button">Try the floor again <span>R</span></button>
+          <button class="ghost" id="btn-title" type="button">Back to title</button>
+        </div>
+      </div>
+    </section>
+
+    <p id="status" role="status" aria-live="polite"></p>
+  </main>
+</div>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

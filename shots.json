@@ -1,0 +1,6 @@
+[
+  { "name": "1-atrium.png", "query": "?shot=atrium" },
+  { "name": "2-gallery.png", "query": "?shot=gallery" },
+  { "name": "3-vault.png", "query": "?shot=vault" },
+  { "name": "4-alert.png", "query": "?shot=alert" }
+]
